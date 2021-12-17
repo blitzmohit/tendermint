@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -10,7 +11,6 @@ import (
 	"regexp"
 	"strings"
 
-	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	"github.com/tendermint/tendermint/rpc/coretypes"
 	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
@@ -134,7 +134,7 @@ func httpParamsToArgs(rpcFunc *RPCFunc, r *http.Request) ([]reflect.Value, error
 
 func jsonStringToArg(rt reflect.Type, arg string) (reflect.Value, error) {
 	rv := reflect.New(rt)
-	err := tmjson.Unmarshal([]byte(arg), rv.Interface())
+	err := json.Unmarshal([]byte(arg), rv.Interface())
 	if err != nil {
 		return rv, err
 	}
@@ -215,7 +215,7 @@ func _nonJSONStringToArg(rt reflect.Type, arg string) (reflect.Value, bool, erro
 
 	if isQuotedString && expectingByteSlice {
 		v := reflect.New(reflect.TypeOf(""))
-		err := tmjson.Unmarshal([]byte(arg), v.Interface())
+		err := json.Unmarshal([]byte(arg), v.Interface())
 		if err != nil {
 			return reflect.ValueOf(nil), false, err
 		}

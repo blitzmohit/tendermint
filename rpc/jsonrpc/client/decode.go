@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	tmjson "github.com/tendermint/tendermint/libs/json"
 	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
 )
 
@@ -31,7 +30,7 @@ func unmarshalResponseBytes(
 	}
 
 	// Unmarshal the RawMessage into the result.
-	if err := tmjson.Unmarshal(response.Result, result); err != nil {
+	if err := json.Unmarshal(response.Result, result); err != nil {
 		return nil, fmt.Errorf("error unmarshaling result: %w", err)
 	}
 
@@ -77,7 +76,7 @@ func unmarshalResponseBytesArray(
 	}
 
 	for i := 0; i < len(responses); i++ {
-		if err := tmjson.Unmarshal(responses[i].Result, results[i]); err != nil {
+		if err := json.Unmarshal(responses[i].Result, results[i]); err != nil {
 			return nil, fmt.Errorf("error unmarshaling #%d result: %w", i, err)
 		}
 	}
