@@ -6,7 +6,6 @@ import (
 
 	cstypes "github.com/tendermint/tendermint/internal/consensus/types"
 	"github.com/tendermint/tendermint/libs/bits"
-	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmmath "github.com/tendermint/tendermint/libs/math"
 	tmcons "github.com/tendermint/tendermint/proto/tendermint/consensus"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -18,18 +17,6 @@ import (
 // converted to a Message via MsgFromProto.
 type Message interface {
 	ValidateBasic() error
-}
-
-func init() {
-	tmjson.RegisterType(&NewRoundStepMessage{}, "tendermint/NewRoundStepMessage")
-	tmjson.RegisterType(&NewValidBlockMessage{}, "tendermint/NewValidBlockMessage")
-	tmjson.RegisterType(&ProposalMessage{}, "tendermint/Proposal")
-	tmjson.RegisterType(&ProposalPOLMessage{}, "tendermint/ProposalPOL")
-	tmjson.RegisterType(&BlockPartMessage{}, "tendermint/BlockPart")
-	tmjson.RegisterType(&VoteMessage{}, "tendermint/Vote")
-	tmjson.RegisterType(&HasVoteMessage{}, "tendermint/HasVote")
-	tmjson.RegisterType(&VoteSetMaj23Message{}, "tendermint/VoteSetMaj23")
-	tmjson.RegisterType(&VoteSetBitsMessage{}, "tendermint/VoteSetBits")
 }
 
 // NewRoundStepMessage is sent for every step taken in the ConsensusState.
