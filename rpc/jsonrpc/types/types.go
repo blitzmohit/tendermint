@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
-
-	tmjson "github.com/tendermint/tendermint/libs/json"
 )
 
 // a wrapper to emulate a sum type: jsonrpcid = string | int
@@ -155,21 +153,19 @@ func (resp *RPCResponse) UnmarshalJSON(data []byte) error {
 }
 
 func NewRPCSuccessResponse(id jsonrpcid, res interface{}) RPCResponse {
-	var rawMsg json.RawMessage
-
+	var result json.RawMessage
 	if res != nil {
-		var js []byte
-		js, err := tmjson.Marshal(res)
+		var err error
+		result, err = json.Marshal(res)
 		if err != nil {
 			return RPCInternalError(id, fmt.Errorf("error marshaling response: %w", err))
 		}
-		rawMsg = json.RawMessage(js)
 	}
 
-	return RPCResponse{JSONRPC: "2.0", ID: id, Result: rawMsg}
+	return RPCResponse{JSONRPC: "2.0", ID: id, Result: result}
 }
 
-func NewRPCErrorResponse(id jsonrpcid, code int, msg string, data string) RPCResponse {
+func NewRPCErrorResponse(id jsonrpcid, code int, msg, data string) RPCResponse {
 	return RPCResponse{
 		JSONRPC: "2.0",
 		ID:      id,
