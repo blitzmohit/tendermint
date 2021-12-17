@@ -190,7 +190,7 @@ func (c *Client) Call(
 ) (interface{}, error) {
 	id := c.nextRequestID()
 
-	request, err := rpctypes.MapToRequest(id, method, params)
+	request, err := rpctypes.NewRequest(id, method, params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to encode params: %w", err)
 	}
@@ -355,7 +355,7 @@ func (b *RequestBatch) Call(
 	result interface{},
 ) (interface{}, error) {
 	id := b.client.nextRequestID()
-	request, err := rpctypes.MapToRequest(id, method, params)
+	request, err := rpctypes.NewRequest(id, method, params)
 	if err != nil {
 		return nil, err
 	}

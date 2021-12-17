@@ -85,53 +85,23 @@ func (req *RPCRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func newRPCRequest(id jsonrpcid, method string, params json.RawMessage) RPCRequest {
-	return RPCRequest{
-		JSONRPC: "2.0",
-		ID:      id,
-		Method:  method,
-		Params:  params,
-	}
-}
-
 func (req RPCRequest) String() string {
 	return fmt.Sprintf("RPCRequest{%s %s/%X}", req.ID, req.Method, req.Params)
 }
 
-func MapToRequest(id jsonrpcid, method string, params map[string]interface{}) (RPCRequest, error) {
-	var paramsMap = make(map[string]json.RawMessage, len(params))
-	for name, value := range params {
-		valueJSON, err := tmjson.Marshal(value)
-		if err != nil {
-			return RPCRequest{}, err
-		}
-		paramsMap[name] = valueJSON
-	}
-
-	payload, err := json.Marshal(paramsMap)
+// NewRequest constructs a JSON-RPC request for the given id, method, and
+// parameter object. An error is reported if marshaling the parameters fails.
+func NewRequest(id jsonrpcid, method string, params map[string]interface{}) (RPCRequest, error) {
+	payload, err := json.Marshal(params)
 	if err != nil {
 		return RPCRequest{}, err
 	}
-
-	return newRPCRequest(id, method, payload), nil
-}
-
-func ArrayToRequest(id jsonrpcid, method string, params []interface{}) (RPCRequest, error) {
-	var paramsMap = make([]json.RawMessage, len(params))
-	for i, value := range params {
-		valueJSON, err := tmjson.Marshal(value)
-		if err != nil {
-			return RPCRequest{}, err
-		}
-		paramsMap[i] = valueJSON
-	}
-
-	payload, err := json.Marshal(paramsMap)
-	if err != nil {
-		return RPCRequest{}, err
-	}
-
-	return newRPCRequest(id, method, payload), nil
+	return RPCRequest{
+		JSONRPC: "2.0",
+		ID:      id,
+		Method:  method,
+		Params:  payload,
+	}, nil
 }
 
 //----------------------------------------
