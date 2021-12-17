@@ -12,8 +12,10 @@ import (
 
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/tmhash"
-	tmjson "github.com/tendermint/tendermint/libs/json"
 )
+
+//go:generate -command gen go run github.com/tendermint/tendermint/scripts/tmjson
+//go:generate gen -output generated.go -pkg ed25519 -prefix tendermint/ PubKey=+PubKeyEd25519 PrivKey=+PrivKeyEd25519
 
 //-------------------------------------
 
@@ -33,6 +35,7 @@ var (
 const (
 	PrivKeyName = "tendermint/PrivKeyEd25519"
 	PubKeyName  = "tendermint/PubKeyEd25519"
+
 	// PubKeySize is is the size, in bytes, of public keys as used in this package.
 	PubKeySize = 32
 	// PrivateKeySize is the size, in bytes, of private keys as used in this package.
@@ -54,11 +57,6 @@ const (
 	// thrashing.
 	cacheSize = 4096
 )
-
-func init() {
-	tmjson.RegisterType(PubKey{}, PubKeyName)
-	tmjson.RegisterType(PrivKey{}, PrivKeyName)
-}
 
 // PrivKey implements crypto.PrivKey.
 type PrivKey []byte
