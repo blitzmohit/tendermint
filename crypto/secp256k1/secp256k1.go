@@ -10,11 +10,13 @@ import (
 
 	secp256k1 "github.com/btcsuite/btcd/btcec"
 	"github.com/tendermint/tendermint/crypto"
-	tmjson "github.com/tendermint/tendermint/libs/json"
 
 	// necessary for Bitcoin address format
 	"golang.org/x/crypto/ripemd160" // nolint
 )
+
+//go:generate -command gen go run github.com/tendermint/tendermint/scripts/tmjson
+//go:generate gen -output generated.go -pkg secp256k1 -prefix tendermint/ PubKey=+PubKeySecp256k1 PrivKey=+PrivKeySecp256k1
 
 //-------------------------------------
 const (
@@ -24,11 +26,6 @@ const (
 	KeyType     = "secp256k1"
 	PrivKeySize = 32
 )
-
-func init() {
-	tmjson.RegisterType(PubKey{}, PubKeyName)
-	tmjson.RegisterType(PrivKey{}, PrivKeyName)
-}
 
 var _ crypto.PrivKey = PrivKey{}
 
