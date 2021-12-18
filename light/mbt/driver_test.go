@@ -1,6 +1,7 @@
 package mbt
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
@@ -8,7 +9,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/light"
 	"github.com/tendermint/tendermint/types"
 )
@@ -28,7 +28,7 @@ func TestVerify(t *testing.T) {
 			}
 
 			var tc testCase
-			err = tmjson.Unmarshal(jsonBlob, &tc)
+			err = json.Unmarshal(jsonBlob, &tc)
 			if err != nil {
 				t.Fatal(err)
 			}

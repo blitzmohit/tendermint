@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -15,7 +16,6 @@ import (
 	sm "github.com/tendermint/tendermint/internal/state"
 	"github.com/tendermint/tendermint/internal/state/indexer"
 	"github.com/tendermint/tendermint/internal/statesync"
-	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	"github.com/tendermint/tendermint/rpc/coretypes"
 	"github.com/tendermint/tendermint/types"
@@ -151,7 +151,7 @@ func (env *Environment) InitGenesisChunks() error {
 		return nil
 	}
 
-	data, err := tmjson.Marshal(env.GenDoc)
+	data, err := json.Marshal(env.GenDoc)
 	if err != nil {
 		return err
 	}

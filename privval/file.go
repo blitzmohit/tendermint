@@ -3,6 +3,7 @@ package privval
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -16,7 +17,6 @@ import (
 	"github.com/tendermint/tendermint/internal/libs/protoio"
 	"github.com/tendermint/tendermint/internal/libs/tempfile"
 	tmbytes "github.com/tendermint/tendermint/libs/bytes"
-	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	tmtime "github.com/tendermint/tendermint/libs/time"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -61,7 +61,7 @@ func (pvKey FilePVKey) Save() error {
 		return errors.New("cannot save PrivValidator key: filePath not set")
 	}
 
-	jsonBytes, err := tmjson.MarshalIndent(pvKey, "", "  ")
+	jsonBytes, err := json.MarshalIndent(pvKey, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -128,7 +128,7 @@ func (lss *FilePVLastSignState) Save() error {
 	if outFile == "" {
 		return errors.New("cannot save FilePVLastSignState: filePath not set")
 	}
-	jsonBytes, err := tmjson.MarshalIndent(lss, "", "  ")
+	jsonBytes, err := json.MarshalIndent(lss, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -198,7 +198,7 @@ func loadFilePV(keyFilePath, stateFilePath string, loadState bool) (*FilePV, err
 		return nil, err
 	}
 	pvKey := FilePVKey{}
-	err = tmjson.Unmarshal(keyJSONBytes, &pvKey)
+	err = json.Unmarshal(keyJSONBytes, &pvKey)
 	if err != nil {
 		return nil, fmt.Errorf("error reading PrivValidator key from %v: %w", keyFilePath, err)
 	}
@@ -215,7 +215,7 @@ func loadFilePV(keyFilePath, stateFilePath string, loadState bool) (*FilePV, err
 		if err != nil {
 			return nil, err
 		}
-		err = tmjson.Unmarshal(stateJSONBytes, &pvState)
+		err = json.Unmarshal(stateJSONBytes, &pvState)
 		if err != nil {
 			return nil, fmt.Errorf("error reading PrivValidator state from %v: %w", stateFilePath, err)
 		}

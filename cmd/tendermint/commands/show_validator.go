@@ -2,12 +2,12 @@ package commands
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
 
 	"github.com/tendermint/tendermint/crypto"
-	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmnet "github.com/tendermint/tendermint/libs/net"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	"github.com/tendermint/tendermint/privval"
@@ -70,7 +70,7 @@ func showValidator(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	bz, err := tmjson.Marshal(pubKey)
+	bz, err := json.Marshal(pubKey)
 	if err != nil {
 		return fmt.Errorf("failed to marshal private validator pubkey: %w", err)
 	}
