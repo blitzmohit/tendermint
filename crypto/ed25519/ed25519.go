@@ -17,11 +17,14 @@ import (
 //go:generate -command gen go run github.com/tendermint/tendermint/scripts/tmjson
 //go:generate gen -output generated.go -pkg ed25519 -prefix tendermint/ PubKey=+PubKeyEd25519 PrivKey=+PrivKeyEd25519
 
+func init() {
+	crypto.RegisterPubKeyType(pubKeyName, PubKey(nil))
+	crypto.RegisterPrivKeyType(privKeyName, PrivKey(nil))
+}
+
 //-------------------------------------
 
 var (
-	_ crypto.PrivKey = PrivKey{}
-
 	// curve25519-voi's Ed25519 implementation supports configurable
 	// verification behavior, and tendermint uses the ZIP-215 verification
 	// semantics.
@@ -33,8 +36,8 @@ var (
 )
 
 const (
-	PrivKeyName = "tendermint/PrivKeyEd25519"
-	PubKeyName  = "tendermint/PubKeyEd25519"
+	privKeyName = "tendermint/PrivKeyEd25519"
+	pubKeyName  = "tendermint/PubKeyEd25519"
 
 	// PubKeySize is is the size, in bytes, of public keys as used in this package.
 	PubKeySize = 32
@@ -143,8 +146,6 @@ func GenPrivKeyFromSecret(secret []byte) PrivKey {
 }
 
 //-------------------------------------
-
-var _ crypto.PubKey = PubKey{}
 
 // PubKeyEd25519 implements crypto.PubKey for the Ed25519 signature scheme.
 type PubKey []byte

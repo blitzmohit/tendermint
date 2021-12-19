@@ -10,8 +10,6 @@ import (
 	"github.com/tendermint/tendermint/crypto/tmhash"
 )
 
-var _ crypto.PubKey = PubKey{}
-
 const (
 	// PubKeySize is the size of a sr25519 public key in bytes.
 	PubKeySize = sr25519.PublicKeySize

@@ -11,8 +11,6 @@ import (
 )
 
 var (
-	_ crypto.PrivKey = PrivKey{}
-
 	signingCtx = sr25519.NewSigningContext([]byte{})
 )
 
