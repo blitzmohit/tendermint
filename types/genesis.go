@@ -28,7 +28,7 @@ const (
 type GenesisValidator struct {
 	Address Address       `json:"address"`
 	PubKey  crypto.PubKey `json:"pub_key"`
-	Power   int64         `json:"power"`
+	Power   Int64         `json:"power"`
 	Name    string        `json:"name"`
 }
 
@@ -36,7 +36,7 @@ type GenesisValidator struct {
 type GenesisDoc struct {
 	GenesisTime     time.Time          `json:"genesis_time"`
 	ChainID         string             `json:"chain_id"`
-	InitialHeight   int64              `json:"initial_height"`
+	InitialHeight   Int64              `json:"initial_height"`
 	ConsensusParams *ConsensusParams   `json:"consensus_params,omitempty"`
 	Validators      []GenesisValidator `json:"validators,omitempty"`
 	AppHash         tmbytes.HexBytes   `json:"app_hash"`
@@ -57,7 +57,7 @@ func (genDoc *GenesisDoc) SaveAs(file string) error {
 func (genDoc *GenesisDoc) ValidatorHash() []byte {
 	vals := make([]*Validator, len(genDoc.Validators))
 	for i, v := range genDoc.Validators {
-		vals[i] = NewValidator(v.PubKey, v.Power)
+		vals[i] = NewValidator(v.PubKey, int64(v.Power))
 	}
 	vset := NewValidatorSet(vals)
 	return vset.Hash()
