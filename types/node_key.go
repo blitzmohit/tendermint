@@ -71,11 +71,19 @@ func LoadNodeKey(filePath string) (NodeKey, error) {
 	if err != nil {
 		return NodeKey{}, err
 	}
-	nodeKey := NodeKey{}
-	err = json.Unmarshal(jsonBytes, &nodeKey)
+	var shim struct {
+		ID      NodeID          `json:"id"`
+		PrivKey json.RawMessage `json:"priv_key"`
+	}
+	if err := json.Unmarshal(jsonBytes, &shim); err != nil {
+		return NodeKey{}, err
+	}
+	priv, err := crypto.UnmarshalPrivKey(shim.PrivKey)
 	if err != nil {
 		return NodeKey{}, err
 	}
-	nodeKey.ID = NodeIDFromPubKey(nodeKey.PubKey())
-	return nodeKey, nil
+	return NodeKey{
+		ID:      NodeIDFromPubKey(priv.PubKey()),
+		PrivKey: priv,
+	}, nil
 }
