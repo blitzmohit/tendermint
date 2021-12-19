@@ -12,6 +12,27 @@ var (
 
 // UnmarshalPubKeyJSON decodes a JSON text as a PubKey implementation.
 func UnmarshalPubKey(data []byte) (PubKey, error) {
+	pk, err := unmarshalKeyType(data)
+	if err != nil {
+		return nil, err
+	} else if pub, ok := pk.(PubKey); ok {
+		return pub, nil
+	}
+	return nil, fmt.Errorf("type %T is not a PubKey", pk)
+}
+
+// UnmarshalPrivKeyJSON decodes a JSON text as a PrivKey implementation.
+func UnmarshalPrivKey(data []byte) (PrivKey, error) {
+	pk, err := unmarshalKeyType(data)
+	if err != nil {
+		return nil, err
+	} else if priv, ok := pk.(PrivKey); ok {
+		return priv, nil
+	}
+	return nil, fmt.Errorf("type %T is not a PrivKey", pk)
+}
+
+func unmarshalKeyType(data []byte) (interface{}, error) {
 	var shim struct {
 		Type  string          `json:"type"`
 		Value json.RawMessage `json:"value"`
@@ -25,8 +46,7 @@ func UnmarshalPubKey(data []byte) (PubKey, error) {
 	} else if err := json.Unmarshal(shim.Value, ktype); err != nil {
 		return nil, err
 	}
-	pk := reflect.ValueOf(ktype).Elem().Interface()
-	return pk.(PubKey), nil
+	return reflect.ValueOf(ktype).Elem().Interface(), nil
 }
 
 func registerKeyType(name string, v reflect.Type) {
