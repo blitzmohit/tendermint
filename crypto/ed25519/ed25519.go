@@ -15,11 +15,11 @@ import (
 )
 
 //go:generate -command gen go run github.com/tendermint/tendermint/scripts/tmjson
-//go:generate gen -output generated.go -pkg ed25519 -prefix tendermint/ PubKey=+PubKeyEd25519 PrivKey=+PrivKeyEd25519
+//go:generate gen -output generated.go -pkg ed25519 -m -prefix tendermint/ PubKey=+PubKeyEd25519 PrivKey=+PrivKeyEd25519
 
 func init() {
-	crypto.RegisterPubKeyType(pubKeyName, PubKey(nil))
-	crypto.RegisterPrivKeyType(privKeyName, PrivKey(nil))
+	crypto.RegisterPubKeyType(PubKeyName, PubKey(nil))
+	crypto.RegisterPrivKeyType(PrivKeyName, PrivKey(nil))
 }
 
 //-------------------------------------
@@ -36,8 +36,8 @@ var (
 )
 
 const (
-	privKeyName = "tendermint/PrivKeyEd25519"
-	pubKeyName  = "tendermint/PubKeyEd25519"
+	PrivKeyName = "tendermint/PrivKeyEd25519"
+	PubKeyName  = "tendermint/PubKeyEd25519"
 
 	// PubKeySize is is the size, in bytes, of public keys as used in this package.
 	PubKeySize = 32

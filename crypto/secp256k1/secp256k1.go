@@ -16,17 +16,17 @@ import (
 )
 
 //go:generate -command gen go run github.com/tendermint/tendermint/scripts/tmjson
-//go:generate gen -output generated.go -pkg secp256k1 -prefix tendermint/ PubKey=+PubKeySecp256k1 PrivKey=+PrivKeySecp256k1
+//go:generate gen -output generated.go -pkg secp256k1 -m -prefix tendermint/ PubKey=+PubKeySecp256k1 PrivKey=+PrivKeySecp256k1
 
 func init() {
-	crypto.RegisterPubKeyType(pubKeyName, PubKey(nil))
-	crypto.RegisterPrivKeyType(privKeyName, PrivKey(nil))
+	crypto.RegisterPubKeyType(PubKeyName, PubKey(nil))
+	crypto.RegisterPrivKeyType(PrivKeyName, PrivKey(nil))
 }
 
 //-------------------------------------
 const (
-	privKeyName = "tendermint/PrivKeySecp256k1"
-	pubKeyName  = "tendermint/PubKeySecp256k1"
+	PrivKeyName = "tendermint/PrivKeySecp256k1"
+	PubKeyName  = "tendermint/PubKeySecp256k1"
 
 	KeyType     = "secp256k1"
 	PrivKeySize = 32

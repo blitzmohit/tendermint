@@ -85,17 +85,6 @@ func (privKey PrivKey) Type() string {
 	return KeyType
 }
 
-func (privKey PrivKey) MarshalJSON() ([]byte, error) {
-	var b []byte
-
-	// Handle uninitialized private keys gracefully.
-	if privKey.kp != nil {
-		b = privKey.Bytes()
-	}
-
-	return json.Marshal(b)
-}
-
 func (privKey *PrivKey) UnmarshalJSON(data []byte) error {
 	for i := range privKey.msk {
 		privKey.msk[i] = 0
