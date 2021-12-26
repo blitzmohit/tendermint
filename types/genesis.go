@@ -28,7 +28,7 @@ const (
 type GenesisValidator struct {
 	Address Address       `json:"address"`
 	PubKey  crypto.PubKey `json:"pub_key"`
-	Power   Int64         `json:"power"`
+	Power   int64         `json:"power,string"`
 	Name    string        `json:"name"`
 }
 
@@ -36,7 +36,7 @@ type GenesisValidator struct {
 type GenesisDoc struct {
 	GenesisTime     time.Time          `json:"genesis_time"`
 	ChainID         string             `json:"chain_id"`
-	InitialHeight   Int64              `json:"initial_height"`
+	InitialHeight   int64              `json:"initial_height,string"`
 	ConsensusParams *ConsensusParams   `json:"consensus_params,omitempty"`
 	Validators      []GenesisValidator `json:"validators,omitempty"`
 	AppHash         tmbytes.HexBytes   `json:"app_hash"`

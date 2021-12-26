@@ -7,6 +7,8 @@ import (
 	"fmt"
 )
 
+var _ fmt.Stringer // suppress unused package
+
 type _typeTagged struct {
 	T string          `json:"type"`
 	V json.RawMessage `json:"value"`
