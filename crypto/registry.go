@@ -43,7 +43,7 @@ func unmarshalKeyType(data []byte) (interface{}, error) {
 	ktype := newKeyValue(shim.Type)
 	if ktype == nil {
 		return nil, fmt.Errorf("unknown key type %q", shim.Type)
-	} else if err := json.Unmarshal(shim.Value, ktype); err != nil {
+	} else if err := json.Unmarshal(data, ktype); err != nil {
 		return nil, err
 	}
 	return reflect.ValueOf(ktype).Elem().Interface(), nil
