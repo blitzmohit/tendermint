@@ -7,7 +7,8 @@ import (
 )
 
 // Generate JSON encoding wrappers for the types in this package.
-//go:generate sh ./json.sh
+//go:generate -command gen go run github.com/creachadair/misctools/tagtype@latest
+//go:generate gen -output generated.go
 
 func (g *GenesisValidator) UnmarshalJSON(data []byte) error {
 	var shim struct {
@@ -28,4 +29,23 @@ func (g *GenesisValidator) UnmarshalJSON(data []byte) error {
 	g.PubKey = pk
 	g.Name = shim.Name
 	return nil
+}
+
+func (DuplicateVoteEvidence) jsonWrapperTag() string     { return "tendermint/DuplicateVoteEvidence" }
+func (EventDataBlockSyncStatus) jsonWrapperTag() string  { return "tendermint/event/BlockSyncStatus" }
+func (EventDataCompleteProposal) jsonWrapperTag() string { return "tendermint/event/CompleteProposal" }
+func (EventDataNewBlock) jsonWrapperTag() string         { return "tendermint/event/NewBlock" }
+func (EventDataNewBlockHeader) jsonWrapperTag() string   { return "tendermint/event/NewBlockHeader" }
+func (EventDataNewEvidence) jsonWrapperTag() string      { return "tendermint/event/NewEvidence" }
+func (EventDataNewRound) jsonWrapperTag() string         { return "tendermint/event/NewRound" }
+func (EventDataRoundState) jsonWrapperTag() string       { return "tendermint/event/RoundState" }
+func (EventDataStateSyncStatus) jsonWrapperTag() string  { return "tendermint/event/StateSyncStatus" }
+func (EventDataString) jsonWrapperTag() string           { return "tendermint/event/ProposalString" }
+func (EventDataTx) jsonWrapperTag() string               { return "tendermint/event/Tx" }
+func (EventDataValidatorSetUpdates) jsonWrapperTag() string {
+	return "tendermint/event/ValidatorSetUpdates"
+}
+func (EventDataVote) jsonWrapperTag() string { return "tendermint/event/Vote" }
+func (LightClientAttackEvidence) jsonWrapperTag() string {
+	return "tendermint/LightClientAttackEvidence"
 }

@@ -2,8 +2,12 @@ package sr25519
 
 import "github.com/tendermint/tendermint/crypto"
 
-//go:generate -command gen go run github.com/tendermint/tendermint/scripts/tmjson
-//go:generate gen -output generated.go -pkg sr25519 -m -prefix tendermint/ PubKey=+PubKeySr25519 PrivKey=+PrivKeySr25519
+// Generate JSON encoding wrappers for the types in this package.
+//go:generate -command gen go run github.com/creachadair/misctools/tagtype@latest
+//go:generate gen -output generated.go
+
+func (PubKey) jsonWrapperTag() string  { return PubKeyName }
+func (PrivKey) jsonWrapperTag() string { return PrivKeyName }
 
 const (
 	PrivKeyName = "tendermint/PrivKeySr25519"

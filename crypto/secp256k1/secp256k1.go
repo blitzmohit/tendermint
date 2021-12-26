@@ -15,8 +15,12 @@ import (
 	"golang.org/x/crypto/ripemd160" // nolint
 )
 
-//go:generate -command gen go run github.com/tendermint/tendermint/scripts/tmjson
-//go:generate gen -output generated.go -pkg secp256k1 -m -prefix tendermint/ PubKey=+PubKeySecp256k1 PrivKey=+PrivKeySecp256k1
+// Generate JSON encoding wrappers for the types in this package.
+//go:generate -command gen go run github.com/creachadair/misctools/tagtype@latest
+//go:generate gen -output generated.go
+
+func (PubKey) jsonWrapperTag() string  { return PubKeyName }
+func (PrivKey) jsonWrapperTag() string { return PrivKeyName }
 
 func init() {
 	crypto.RegisterPubKeyType(PubKeyName, PubKey(nil))
