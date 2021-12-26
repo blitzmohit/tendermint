@@ -1,7 +1,7 @@
 package sr25519
 
 import (
-	"encoding/json"
+	"encoding/base64"
 	"fmt"
 	"io"
 
@@ -85,16 +85,25 @@ func (privKey PrivKey) Type() string {
 	return KeyType
 }
 
-func (privKey *PrivKey) UnmarshalJSON(data []byte) error {
+func (privKey *PrivKey) MarshalText() ([]byte, error) {
+	data := privKey.Bytes()
+	buf := make([]byte, base64.StdEncoding.EncodedLen(len(data)))
+	base64.StdEncoding.Encode(buf, data)
+	return buf, nil
+}
+
+func (privKey *PrivKey) UnmarshalText(data []byte) error {
 	for i := range privKey.msk {
 		privKey.msk[i] = 0
 	}
 	privKey.kp = nil
 
-	var b []byte
-	if err := json.Unmarshal(data, &b); err != nil {
-		return fmt.Errorf("sr25519: failed to deserialize JSON: %w", err)
+	b := make([]byte, base64.StdEncoding.DecodedLen(len(data)))
+	n, err := base64.StdEncoding.Decode(b, data)
+	if err != nil {
+		return fmt.Errorf("sr25519: failed to decode key: %w", err)
 	}
+	b = b[:n]
 	if len(b) == 0 {
 		return nil
 	}
