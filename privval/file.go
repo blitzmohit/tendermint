@@ -54,6 +54,29 @@ type FilePVKey struct {
 	filePath string
 }
 
+func (f *FilePVKey) UnmarshalJSON(data []byte) error {
+	var shim struct {
+		Address types.Address   `json:"address"`
+		PubKey  json.RawMessage `json:"pub_key"`
+		PrivKey json.RawMessage `json:"priv_key"`
+	}
+	if err := json.Unmarshal(data, &shim); err != nil {
+		return err
+	}
+	pubk, err := crypto.UnmarshalPubKey(shim.PubKey)
+	if err != nil {
+		return err
+	}
+	privk, err := crypto.UnmarshalPrivKey(shim.PrivKey)
+	if err != nil {
+		return err
+	}
+	f.Address = shim.Address
+	f.PubKey = pubk
+	f.PrivKey = privk
+	return nil
+}
+
 // Save persists the FilePVKey to its filePath.
 func (pvKey FilePVKey) Save() error {
 	outFile := pvKey.filePath
@@ -72,7 +95,7 @@ func (pvKey FilePVKey) Save() error {
 
 // FilePVLastSignState stores the mutable part of PrivValidator.
 type FilePVLastSignState struct {
-	Height    int64            `json:"height"`
+	Height    int64            `json:"height,string"`
 	Round     int32            `json:"round"`
 	Step      int8             `json:"step"`
 	Signature []byte           `json:"signature,omitempty"`
